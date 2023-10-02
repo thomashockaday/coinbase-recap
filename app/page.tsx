@@ -1,8 +1,36 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useState } from 'react';
 
 export default function Home() {
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [fileContents, setFileContents] = useState<String | null>(null);
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    if (event.target.files === null) {
+      return;
+    }
+
+    setUploadedFile(event.target.files[0]);
+  };
+
+  const handleSubmit = (): void => {
+    if (uploadedFile === null) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (): void => {
+      setFileContents(reader.result as string);
+    };
+    reader.readAsBinaryString(uploadedFile);
+  };
+
   return (
     <main className="p-24">
       <section className="py-12 flex flex-col items-center gap-8">
@@ -29,11 +57,20 @@ export default function Home() {
 
         <div className="w-full max-w-sm">
           <Label htmlFor="csv">Upload your transaction history</Label>
-          <Input id="csv" type="file" />
+          <Input
+            id="csv"
+            type="file"
+            accept=".csv"
+            onChange={handleFileChange}
+          />
         </div>
 
-        <Button>View my recap</Button>
+        <Button disabled={uploadedFile === null} onClick={handleSubmit}>
+          Generate recap
+        </Button>
       </section>
+
+      {fileContents !== null && <section>{fileContents}</section>}
     </main>
   );
 }
