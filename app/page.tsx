@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Transaction, columns, csvToArray } from './table-data';
@@ -68,7 +69,8 @@ export default function Home() {
             href="https://help.coinbase.com/en/contact-us/support-faq/coinbase/how-to-view-your-balance-and-transactions"
             className="text-primary underline hover:no-underline"
           >
-            official Coinbase support site
+            official Coinbase support site&nbsp;
+            <ExternalLinkIcon className="inline h-4 w-4" />
           </a>
           .
         </p>
