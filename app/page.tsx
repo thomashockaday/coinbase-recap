@@ -80,9 +80,15 @@ export default function Home() {
         </Button>
       </section>
 
-      <section className="py-12">
-        <DataTable columns={columns} data={rows} />
-      </section>
+      {rows.length > 0 && (
+        <section className="py-12">
+          <p className="py-6 text-muted-foreground">
+            Table data is truncated to 10 rows by default
+          </p>
+
+          <DataTable columns={columns} data={rows} />
+        </section>
+      )}
     </main>
   );
 }

@@ -1,4 +1,6 @@
-import { ColumnDef, Row } from '@tanstack/react-table';
+import { Button } from '@/components/ui/button';
+import { Column, ColumnDef, Row } from '@tanstack/react-table';
+import { ArrowUpDown } from 'lucide-react';
 import { ReactElement } from 'react';
 
 export type Transaction = {
@@ -28,8 +30,26 @@ const formatCellAsCurrency = (
   return <div className="text-right">{formatted}</div>;
 };
 
+const sortableHeader = (
+  column: Column<Transaction>,
+  text: string,
+  isCurrency: boolean = false
+): ReactElement => (
+  <Button
+    variant="ghost"
+    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  >
+    <div className={isCurrency ? 'text-right' : ''}>{text}</div>
+
+    <ArrowUpDown className="ml-2 h-4 w-4" />
+  </Button>
+);
+
 export const columns: ColumnDef<Transaction>[] = [
-  { accessorKey: 'timestamp', header: 'Timestamp' },
+  {
+    accessorKey: 'timestamp',
+    header: ({ column }): ReactElement => sortableHeader(column, 'Timestamp'),
+  },
   { accessorKey: 'type', header: 'Transaction Type' },
   { accessorKey: 'asset', header: 'Asset' },
   { accessorKey: 'quantity', header: 'Quantity Transacted' },
@@ -49,9 +69,8 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: 'total',
-    header: (): ReactElement => (
-      <div className="text-right">Total (inclusive of fees and/or spread)</div>
-    ),
+    header: ({ column }): ReactElement =>
+      sortableHeader(column, 'Total (inclusive of fees and/or spread)', true),
     cell: ({ row }): ReactElement => formatCellAsCurrency(row, 'total'),
   },
   {
