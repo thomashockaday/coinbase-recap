@@ -1,13 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
+import { Transaction, columns, csvToArray } from './table-data';
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [fileContents, setFileContents] = useState<String | null>(null);
+  const [rows, setRows] = useState<Array<Transaction>>([]);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -26,15 +28,20 @@ export default function Home() {
 
     const reader = new FileReader();
     reader.onload = (): void => {
-      setFileContents(reader.result as string);
+      let fileContents = reader.result as string;
+
+      // Trim anything off before the main headers start
+      fileContents = fileContents.substring(fileContents.indexOf('Timestamp'));
+
+      setRows(csvToArray(fileContents));
     };
     reader.readAsBinaryString(uploadedFile);
   };
 
   return (
-    <main className="p-24">
-      <section className="py-12 flex flex-col items-center gap-8">
-        <h1 className="text-4xl font-bold">Coinbase Recap</h1>
+    <main className="p-12 md:p-24">
+      <section className="py-12 flex flex-col items-center gap-8 border-b">
+        <h1 className="text-4xl font-bold text-center">Coinbase Recap</h1>
 
         <p className="text-2xl text-muted-foreground text-center">
           View a breakdown of your Coinbase transaction history
@@ -70,7 +77,9 @@ export default function Home() {
         </Button>
       </section>
 
-      {fileContents !== null && <section>{fileContents}</section>}
+      <section className="py-12">
+        <DataTable columns={columns} data={rows} />
+      </section>
     </main>
   );
 }
