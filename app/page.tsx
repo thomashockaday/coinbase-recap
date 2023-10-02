@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Transaction, columns, csvToArray } from './table-data';
 
@@ -44,6 +45,13 @@ export default function Home() {
   return (
     <main className="p-12 md:p-24">
       <section className="py-12 flex flex-col items-center gap-8 border-b">
+        <Image
+          src="/logo.webp"
+          width={63}
+          height={63}
+          alt="Two arrows spinning around a play button, symbolising replaying history"
+        />
+
         <h1 className="text-4xl font-bold text-center">Coinbase Recap</h1>
 
         <p className="text-2xl text-muted-foreground text-center">
