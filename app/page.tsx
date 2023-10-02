@@ -33,6 +33,9 @@ export default function Home() {
       // Trim anything off before the main headers start
       fileContents = fileContents.substring(fileContents.indexOf('Timestamp'));
 
+      // Replace wonky encodings from CSVs
+      fileContents = fileContents.replaceAll('Â£', '£');
+
       setRows(csvToArray(fileContents));
     };
     reader.readAsBinaryString(uploadedFile);
