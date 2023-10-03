@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { toCurrency } from '@/lib/utils';
 import { Column, ColumnDef, Row } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { ReactElement } from 'react';
@@ -21,11 +22,10 @@ const formatCellAsCurrency = (
   row: Row<Transaction>,
   cell: string
 ): ReactElement => {
-  const data = parseFloat(row.getValue(cell));
-  const formatted = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: row.getValue('spotPriceCurrency'),
-  }).format(data);
+  const formatted = toCurrency(
+    row.getValue(cell),
+    row.getValue('spotPriceCurrency')
+  );
 
   return <div className="text-right">{formatted}</div>;
 };

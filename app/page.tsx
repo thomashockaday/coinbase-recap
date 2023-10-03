@@ -5,6 +5,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Header } from '@/components/ui/header';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { toCurrency } from '@/lib/utils';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -13,7 +14,10 @@ import { Transaction, columns, csvToArray } from './table-data';
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [rows, setRows] = useState<Array<Transaction>>([]);
+  const [currency, setCurrency] = useState<string>('GBP');
   const [totalFee, setTotalFee] = useState<number>(0);
+  const [totalBuy, setTotalBuy] = useState<number>(0);
+  const [totalSell, setTotalSell] = useState<number>(0);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -50,12 +54,27 @@ export default function Home() {
       return;
     }
 
+    setCurrency(rows[0].spotPriceCurrency);
+
     let totalFee = 0;
+    let totalBuy = 0;
+    let totalSell = 0;
+
     for (let i = 0; i < rows.length; i++) {
       totalFee += rows[i].fees;
+
+      if (rows[i].type === 'Buy') {
+        totalBuy += rows[i].total;
+      }
+
+      if (rows[i].type === 'Sell') {
+        totalSell += rows[i].total;
+      }
     }
 
     setTotalFee(totalFee);
+    setTotalBuy(totalBuy);
+    setTotalSell(totalSell);
   }, [rows]);
 
   return (
@@ -63,7 +82,7 @@ export default function Home() {
       <Header />
 
       <main className="p-12 md:p-24">
-        <section className="py-12 flex flex-col items-center gap-8 border-b">
+        <section className="py-8 md:py-12 flex flex-col items-center gap-8 border-b">
           <Image
             src="/logo.webp"
             width={63}
@@ -111,10 +130,20 @@ export default function Home() {
         {rows.length > 0 && (
           <>
             <section className="py-12 border-b">
+              <h2 className="text-3xl font-bold">Your Transactions</h2>
+
               <DataTable columns={columns} data={rows} />
             </section>
 
-            <section className="py-12">Total fee: {totalFee}</section>
+            <section className="py-12">
+              <h2 className="text-3xl font-bold">Your Recap</h2>
+
+              <ul>
+                <li>Total fee: {toCurrency(totalFee, currency)}</li>
+                <li>Total buy: {toCurrency(totalBuy, currency)}</li>
+                <li>Total sell: {toCurrency(totalSell, currency)}</li>
+              </ul>
+            </section>
           </>
         )}
       </main>
