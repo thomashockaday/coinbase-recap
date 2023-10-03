@@ -1,12 +1,14 @@
 'use client';
 
+import { DataTable } from '@/components/data-table';
+import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/ui/data-table';
-import { Header } from '@/components/ui/header';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toCurrency } from '@/lib/utils';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
+import { MinusIcon, PlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Transaction, columns, csvToArray } from './table-data';
@@ -81,8 +83,8 @@ export default function Home() {
     <>
       <Header />
 
-      <main className="p-12 md:p-24">
-        <section className="py-8 md:py-12 flex flex-col items-center gap-8 border-b">
+      <main className="p-12">
+        <section className="py-12 flex flex-col items-center gap-8">
           <Image
             src="/logo.webp"
             width={63}
@@ -129,24 +131,72 @@ export default function Home() {
 
         {rows.length > 0 && (
           <>
-            <section className="py-12 border-b">
+            <section className="py-24 flex flex-col gap-8">
               <h2 className="text-3xl font-bold">Your Transactions</h2>
 
               <DataTable columns={columns} data={rows} />
             </section>
 
-            <section className="py-12">
+            <section className="py-24 flex flex-col gap-8">
               <h2 className="text-3xl font-bold">Your Recap</h2>
 
-              <ul>
-                <li>Total fee: {toCurrency(totalFee, currency)}</li>
-                <li>Total buy: {toCurrency(totalBuy, currency)}</li>
-                <li>Total sell: {toCurrency(totalSell, currency)}</li>
-              </ul>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Total Buy
+                    </CardTitle>
+
+                    <MinusIcon className="ml-2 h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {toCurrency(totalBuy, currency)}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Total Sell
+                    </CardTitle>
+
+                    <PlusIcon className="ml-2 h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {toCurrency(totalSell, currency)}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Total Fee
+                    </CardTitle>
+
+                    <MinusIcon className="ml-2 h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {toCurrency(totalFee, currency)}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </section>
           </>
         )}
       </main>
+
+      <footer className="p-12">
+        <p className="text-muted-foreground text-xs text-center">
+          The information on this page is for general information only and is
+          not affiliated with Coinbase in any way.
+        </p>
+      </footer>
     </>
   );
 }

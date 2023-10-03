@@ -27,9 +27,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { Button } from './button';
 import { DataTablePagination } from './data-table-pagination';
-import { Input } from './input';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
