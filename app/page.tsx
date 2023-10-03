@@ -11,6 +11,7 @@ import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { demoTransactions } from './../seeds/transactions';
 import { Transaction, columns, csvToArray } from './table-data';
 
 export default function Home() {
@@ -124,9 +125,18 @@ export default function Home() {
             />
           </div>
 
-          <Button disabled={uploadedFile === null} onClick={handleSubmit}>
-            Generate recap
-          </Button>
+          <div className="flex gap-8">
+            <Button disabled={uploadedFile === null} onClick={handleSubmit}>
+              Generate recap
+            </Button>
+
+            <Button
+              variant="secondary"
+              onClick={() => setRows(demoTransactions)}
+            >
+              See a demo
+            </Button>
+          </div>
         </section>
 
         {rows.length > 0 && (
