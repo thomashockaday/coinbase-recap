@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Transaction, columns, csvToArray } from './table-data';
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [rows, setRows] = useState<Array<Transaction>>([]);
+  const [totalFee, setTotalFee] = useState<number>(0);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -43,6 +44,19 @@ export default function Home() {
     };
     reader.readAsBinaryString(uploadedFile);
   };
+
+  useEffect(() => {
+    if (rows.length === 0) {
+      return;
+    }
+
+    let totalFee = 0;
+    for (let i = 0; i < rows.length; i++) {
+      totalFee += rows[i].fees;
+    }
+
+    setTotalFee(totalFee);
+  }, [rows]);
 
   return (
     <>
@@ -95,9 +109,13 @@ export default function Home() {
         </section>
 
         {rows.length > 0 && (
-          <section className="py-12">
-            <DataTable columns={columns} data={rows} />
-          </section>
+          <>
+            <section className="py-12 border-b">
+              <DataTable columns={columns} data={rows} />
+            </section>
+
+            <section className="py-12">Total fee: {totalFee}</section>
+          </>
         )}
       </main>
     </>
