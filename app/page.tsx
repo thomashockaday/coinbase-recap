@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
+import { Header } from '@/components/ui/header';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
@@ -44,57 +45,61 @@ export default function Home() {
   };
 
   return (
-    <main className="p-12 md:p-24">
-      <section className="py-12 flex flex-col items-center gap-8 border-b">
-        <Image
-          src="/logo.webp"
-          width={63}
-          height={63}
-          alt="Two arrows spinning around a play button, symbolising replaying history"
-        />
+    <>
+      <Header />
 
-        <h1 className="text-4xl font-bold text-center">Coinbase Recap</h1>
-
-        <p className="text-2xl text-muted-foreground text-center">
-          View a breakdown of your Coinbase transaction history
-        </p>
-
-        <p className="max-w-2xl text-center">
-          To get started you will need to export your full Coinbase transaction
-          history as a CSV file. You can find instructions on how to do this on
-          the{' '}
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://help.coinbase.com/en/contact-us/support-faq/coinbase/how-to-view-your-balance-and-transactions"
-            className="text-primary underline hover:no-underline"
-          >
-            official Coinbase support site&nbsp;
-            <ExternalLinkIcon className="inline h-4 w-4" />
-          </a>
-          .
-        </p>
-
-        <div className="w-full max-w-sm">
-          <Label htmlFor="csv">Upload your transaction history</Label>
-          <Input
-            id="csv"
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
+      <main className="p-12 md:p-24">
+        <section className="py-12 flex flex-col items-center gap-8 border-b">
+          <Image
+            src="/logo.webp"
+            width={63}
+            height={63}
+            alt="Two arrows spinning around a play button, symbolising replaying history"
           />
-        </div>
 
-        <Button disabled={uploadedFile === null} onClick={handleSubmit}>
-          Generate recap
-        </Button>
-      </section>
+          <h1 className="text-4xl font-bold text-center">Coinbase Recap</h1>
 
-      {rows.length > 0 && (
-        <section className="py-12">
-          <DataTable columns={columns} data={rows} />
+          <p className="text-2xl text-muted-foreground text-center">
+            View a breakdown of your Coinbase transaction history
+          </p>
+
+          <p className="max-w-2xl text-center">
+            To get started you will need to export your full Coinbase
+            transaction history as a CSV file. You can find instructions on how
+            to do this on the{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://help.coinbase.com/en/contact-us/support-faq/coinbase/how-to-view-your-balance-and-transactions"
+              className="text-primary underline hover:no-underline"
+            >
+              official Coinbase support site&nbsp;
+              <ExternalLinkIcon className="inline h-4 w-4" />
+            </a>
+            .
+          </p>
+
+          <div className="w-full max-w-sm">
+            <Label htmlFor="csv">Upload your transaction history</Label>
+            <Input
+              id="csv"
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+            />
+          </div>
+
+          <Button disabled={uploadedFile === null} onClick={handleSubmit}>
+            Generate recap
+          </Button>
         </section>
-      )}
-    </main>
+
+        {rows.length > 0 && (
+          <section className="py-12">
+            <DataTable columns={columns} data={rows} />
+          </section>
+        )}
+      </main>
+    </>
   );
 }
