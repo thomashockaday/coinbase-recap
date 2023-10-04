@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toCurrency } from '@/lib/utils';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
-import { MinusIcon, PlusIcon } from 'lucide-react';
+import { CoinsIcon, MinusIcon, PlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { demoTransactions } from '../seeds/transactions';
@@ -20,6 +20,7 @@ export default function Home() {
   const [totalFee, setTotalFee] = useState<number>(0);
   const [totalBuy, setTotalBuy] = useState<number>(0);
   const [totalSell, setTotalSell] = useState<number>(0);
+  const [owned, setOwned] = useState<{ [key: string]: number }>({});
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -58,9 +59,10 @@ export default function Home() {
 
     setCurrency(rows[0].spotPriceCurrency);
 
-    let totalFee = 0;
-    let totalBuy = 0;
-    let totalSell = 0;
+    let totalFee: number = 0;
+    let totalBuy: number = 0;
+    let totalSell: number = 0;
+    let owned: { [key: string]: number } = {};
 
     for (let i = 0; i < rows.length; i++) {
       totalFee += rows[i].fees;
@@ -72,11 +74,68 @@ export default function Home() {
       if (rows[i].type === 'Sell') {
         totalSell += rows[i].total;
       }
+
+      const quantity = rows[i].quantity;
+
+      switch (rows[i].type) {
+        case 'Buy':
+        case 'Receive':
+        case 'Rewards Income':
+        case 'Learning Reward':
+          if (owned[rows[i].asset] === undefined) {
+            owned[rows[i].asset] = quantity;
+          } else {
+            owned[rows[i].asset] += quantity;
+          }
+          break;
+        case 'Sell':
+        case 'Send':
+          if (owned[rows[i].asset] === undefined) {
+            owned[rows[i].asset] = quantity * -1;
+          } else {
+            owned[rows[i].asset] -= quantity;
+          }
+          break;
+        case 'Convert':
+          // Example: Converted 0.21982944 ETH to 0.21982944 ETH2
+          let notes = rows[i].notes;
+
+          // Trim "Converted "
+          notes = notes.substring(10);
+
+          let [from, to] = notes.split(' to ');
+          let [fromAmount, fromUnit] = from.split(' ');
+          let [toAmount, toUnit] = to.split(' ');
+
+          if (owned[fromUnit] === undefined) {
+            owned[fromUnit] = parseFloat(fromAmount) * -1;
+          } else {
+            owned[fromUnit] -= parseFloat(fromAmount);
+          }
+
+          if (owned[toUnit] === undefined) {
+            owned[toUnit] = parseFloat(toAmount);
+          } else {
+            owned[toUnit] += parseFloat(toAmount);
+          }
+
+          break;
+      }
     }
+
+    let currentlyOwned: { [key: string]: number } = {};
+
+    Object.keys(owned).forEach((key) => {
+      // Remove miniscule amounts caused by rounding errors
+      if (owned[key] > 0.00000001) {
+        currentlyOwned[key] = parseFloat(owned[key].toFixed(8));
+      }
+    });
 
     setTotalFee(totalFee);
     setTotalBuy(totalBuy);
     setTotalSell(totalSell);
+    setOwned(currentlyOwned);
   }, [rows]);
 
   return (
@@ -188,6 +247,25 @@ export default function Home() {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          </section>
+
+          <section className="py-24 flex flex-col gap-8">
+            <h2 className="text-3xl font-bold">Currently Owned</h2>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {Object.keys(owned).map((key) => (
+                <Card key={key}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">{key}</CardTitle>
+
+                    <CoinsIcon className="ml-2 h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{owned[key]}</div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </section>
         </>
