@@ -1,6 +1,5 @@
-import { ThemeProvider } from '@/components/provider/theme-provider';
 import { Footer } from '@/components/template/footer';
-import { Header } from '@/components/template/header';
+import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -20,12 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system">
-          <Header />
-          {children}
-          <Footer />
-        </ThemeProvider>
+      <body className={cn(inter.className, 'bg-background text-foreground')}>
+        {children}
+        <Footer />
       </body>
     </html>
   );
