@@ -1,16 +1,14 @@
-'use client';
-
 import { DataTable } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toCurrency } from '@/lib/utils';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { CoinsIcon, MinusIcon, PlusIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { demoTransactions } from '../seeds/transactions';
-import { Transaction, columns, csvToArray } from './home/table-data';
+import { Transaction, columns, csvToArray } from './table-data';
+import { toCurrency } from './utils';
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -147,7 +145,7 @@ export default function Home() {
     <main className="p-12">
       <section className="py-12 flex flex-col items-center gap-8">
         <img
-          src="/logo.webp"
+          src="logo.webp"
           width="63px"
           height="63px"
           alt="Two arrows spinning around a play button, symbolising replaying history"

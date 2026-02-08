@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
-import { toCurrency } from '@/lib/utils';
 import { Column, ColumnDef, Row } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { ReactElement } from 'react';
+import { toCurrency } from './utils';
 
 export type Transaction = {
   id: number;
