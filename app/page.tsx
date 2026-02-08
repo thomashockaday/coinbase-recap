@@ -136,6 +136,12 @@ export default function Home() {
     setTotalBuy(totalBuy);
     setTotalSell(totalSell);
     setOwned(currentlyOwned);
+
+    window.scroll({
+      top: 600,
+      left: 0,
+      behavior: 'smooth',
+    });
   }, [rows]);
 
   return (
