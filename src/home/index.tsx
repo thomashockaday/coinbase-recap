@@ -59,7 +59,7 @@ export default function Home() {
     let totalFee: number = 0;
     let totalBuy: number = 0;
     let totalSell: number = 0;
-    let owned: { [key: string]: number } = {};
+    const owned: { [key: string]: number } = {};
 
     for (let i = 0; i < rows.length; i++) {
       totalFee += rows[i].fees;
@@ -100,9 +100,9 @@ export default function Home() {
           // Trim "Converted "
           notes = notes.substring(10);
 
-          let [from, to] = notes.split(' to ');
-          let [fromAmount, fromUnit] = from.split(' ');
-          let [toAmount, toUnit] = to.split(' ');
+          const [from, to] = notes.split(' to ');
+          const [fromAmount, fromUnit] = from.split(' ');
+          const [toAmount, toUnit] = to.split(' ');
 
           if (owned[fromUnit] === undefined) {
             owned[fromUnit] = parseFloat(fromAmount) * -1;
@@ -120,7 +120,7 @@ export default function Home() {
       }
     }
 
-    let currentlyOwned: { [key: string]: number } = {};
+    const currentlyOwned: { [key: string]: number } = {};
 
     Object.keys(owned).forEach((key) => {
       // Remove miniscule amounts caused by rounding errors
