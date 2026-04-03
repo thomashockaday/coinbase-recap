@@ -145,7 +145,7 @@ export default function Home() {
     <main className="p-12">
       <section className="py-12 flex flex-col items-center gap-8">
         <img
-          src="logo.webp"
+          src="logo.svg"
           width="63px"
           height="63px"
           alt="Two arrows spinning around a play button, symbolising replaying history"
